@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: project_management
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/projecteams
+    username: root
+    password: root
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
