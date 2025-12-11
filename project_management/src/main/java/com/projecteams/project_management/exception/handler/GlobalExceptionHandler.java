@@ -27,6 +27,9 @@ import com.projecteams.project_management.exception.BadRequestException;
 import com.projecteams.project_management.exception.NotFoundException;
 import com.projecteams.project_management.exception.ServiceException;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
@@ -34,7 +37,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> fieldErrors = getFieldErrorMap(ex.getBindingResult());
 
-        LoggerUtils.logError(BAD_REQUEST.name(), getErrorSummary(fieldErrors));
+        log.error(LoggerUtils.formatError(BAD_REQUEST.name(), getErrorSummary(fieldErrors)));
 
         return ResponseEntity
                 .status(BAD_REQUEST)
@@ -46,7 +49,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleBindException(BindException ex) {
         Map<String, String> fieldErrors = getFieldErrorMap(ex.getBindingResult());
 
-        LoggerUtils.logError(BAD_REQUEST.name(), getErrorSummary(fieldErrors));
+        log.error(LoggerUtils.formatError(BAD_REQUEST.name(), getErrorSummary(fieldErrors)));
 
         return ResponseEntity
                 .status(BAD_REQUEST)
@@ -56,7 +59,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException e) {
-        LoggerUtils.logError(FORBIDDEN.name(), e.getResourceId(), e.getMessage());
+        log.error(LoggerUtils.formatError(FORBIDDEN.name(), e.getResourceId(), e.getMessage()));
         return ResponseEntity
                 .status(FORBIDDEN)
                 .body(ResponseUtils.buildErrorResponse(FORBIDDEN, ACCESS_DENIED, e.getMessage()));
@@ -64,7 +67,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<?> handleBadRequestError(BadRequestException e) {
-        LoggerUtils.logError(BAD_REQUEST.name(), e.getResourceId(), e.getMessage());
+        log.error(LoggerUtils.formatError(BAD_REQUEST.name(), e.getResourceId(), e.getMessage()));
         return ResponseEntity
                 .status(BAD_REQUEST)
                 .body(ResponseUtils.buildErrorResponse(BAD_REQUEST, INVALID_REQUEST, e.getMessage()));
@@ -72,7 +75,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<?> handleNotFoundException(NotFoundException e) {
-        LoggerUtils.logError(NOT_FOUND.name(), e.getResourceId(), e.getMessage());
+        log.error(LoggerUtils.formatError(NOT_FOUND.name(), e.getResourceId(), e.getMessage()));
         return ResponseEntity
                 .status(NOT_FOUND)
                 .body(ResponseUtils.buildErrorResponse(NOT_FOUND, INVALID_REQUEST, e.getMessage()));
@@ -80,7 +83,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<?> handleServiceException(ServiceException e) {
-        LoggerUtils.logError(INTERNAL_SERVER_ERROR.name(), e.getResourceId(), e.getMessage());
+        log.error(LoggerUtils.formatError(INTERNAL_SERVER_ERROR.name(), e.getResourceId(), e.getMessage()));
         return ResponseEntity
                 .status(INTERNAL_SERVER_ERROR)
                 .body(ResponseUtils.buildErrorResponse(INTERNAL_SERVER_ERROR, SERVICE_FAILURE, e.getMessage()));
@@ -88,7 +91,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleError(Exception e) {
-        LoggerUtils.logError(INTERNAL_SERVER_ERROR.name(), e);
+        log.error(LoggerUtils.formatError(INTERNAL_SERVER_ERROR.name(), e));
         return ResponseEntity
                 .status(INTERNAL_SERVER_ERROR)
                 .body(ResponseUtils.buildErrorResponse(INTERNAL_SERVER_ERROR, UNEXPECTED_ERROR, e.getMessage()));
