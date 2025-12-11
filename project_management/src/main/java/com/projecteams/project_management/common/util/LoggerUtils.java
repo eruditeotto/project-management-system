@@ -5,38 +5,43 @@ import java.util.Objects;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @UtilityClass
 public class LoggerUtils {
 
-    private static final String EVENT = "event=[\"{}\"] ";
-    private static final String RESOURCE_ID = "resourceId=\"{}\" ";
-    private static final String ERROR_CLASS = "errorClass=\"{}\" ";
-    private static final String MESSAGE = "message=\"{}\"";
+    private static final String EVENT = "event=[\"%s\"] ";
+    private static final String RESOURCE_ID = "resourceId=\"%s\" ";
+    private static final String ERROR_CLASS = "errorClass=\"%s\" ";
+    private static final String MESSAGE = "message=\"%s\"";
 
-    public void logInfo(String event, String resourceId, String message) {
-        if (Objects.nonNull(resourceId))
-            log.info(EVENT + RESOURCE_ID + MESSAGE, event, resourceId, message);
-        else
-            log.info(EVENT + MESSAGE, event, message);
+    public String formatInfo(String event, String resourceId, String message) {
+        if (resourceId != null) {
+            return EVENT.formatted(event)
+                    + RESOURCE_ID.formatted(resourceId)
+                    + MESSAGE.formatted(message);
+        }
+        return EVENT.formatted(event) + MESSAGE.formatted(message);
     }
 
-    public void logInfo(String event, String message) {
-        log.info(EVENT + MESSAGE, event, message);
+    public String formatInfo(String event, String message) {
+        return EVENT.formatted(event) + MESSAGE.formatted(message);
     }
 
-    public void logError(String event, String resourceId, String message) {
-        if (Objects.nonNull(resourceId))
-            log.error(EVENT + RESOURCE_ID + MESSAGE, event, resourceId, message);
-        else
-            log.error(EVENT + MESSAGE, event, message);
+    public String formatError(String event, String resourceId, String message) {
+        if (resourceId != null) {
+            return EVENT.formatted(event)
+                    + RESOURCE_ID.formatted(resourceId)
+                    + MESSAGE.formatted(message);
+        }
+        return EVENT.formatted(event) + MESSAGE.formatted(message);
     }
 
-    public void logError(String event, Throwable e) {
-        log.error(EVENT + MESSAGE + ERROR_CLASS, event, e.getClass().getSimpleName(), e.getMessage());
+    public String formatError(String event, Throwable e) {
+        return EVENT.formatted(event)
+                + MESSAGE.formatted(e.getMessage())
+                + ERROR_CLASS.formatted(e.getClass().getSimpleName());
     }
 
-    public void logError(String event, String message) {
-        log.error(EVENT + MESSAGE, event, message);
+    public String formatError(String event, String message) {
+        return EVENT.formatted(event) + MESSAGE.formatted(message);
     }
 }
