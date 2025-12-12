@@ -35,7 +35,7 @@ public class ProjectResponse {
                 .priorityLevel(project.getPriorityLevel())
                 .status(project.getStatus())
                 .isArchived(project.isArchived())
-                .creator(UserResponse.)
+                .creator(UserResponse.toBasicResponse(project.getCreator()))
                 .build();
     }
 
@@ -48,7 +48,7 @@ public class ProjectResponse {
                 .priorityLevel(project.getPriorityLevel())
                 .status(project.getStatus())
                 .isArchived(project.isArchived())
-                .creator(project.getCreator())
+                .creator(UserResponse.toBasicResponse(project.getCreator()))
                 .createdAt(project.getCreatedAt())
                 .updatedAt(project.getUpdatedAt())
                 .build();
