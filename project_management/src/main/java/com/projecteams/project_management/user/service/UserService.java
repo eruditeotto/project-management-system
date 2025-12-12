@@ -6,6 +6,7 @@ import static com.projecteams.project_management.common.constant.InfoMessage.USE
 import static com.projecteams.project_management.common.constant.InfoMessage.USER_SAVING;
 import static com.projecteams.project_management.common.constant.InfoMessage.USER_SAVED;
 
+
 import com.projecteams.project_management.common.util.LoggerUtils;
 import com.projecteams.project_management.exception.ServiceException;
 import com.projecteams.project_management.user.User;
@@ -44,21 +45,4 @@ public class UserService {
             throw new ServiceException(e.getMessage());
         }
     }
-
-    public void save(User user){
-a
-
-        try{(
-            userRepository.save(user.toEntity(null));
-        }catch (Exception e){
-            String SavingMessage = LoggerUtils.formatInfo(USER_SAVING, USER_SAVED);
-
-            log.info(USER_SAVING);
-
-            throw new ServiceException(e.getMessage());
-        }
-
-    }
-
-
 }

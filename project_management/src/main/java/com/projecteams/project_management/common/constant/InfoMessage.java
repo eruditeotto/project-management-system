@@ -20,4 +20,6 @@ public class InfoMessage {
     public static final String USER_UPDATED = "Successfully updated user";
     public static final String USER_DELETING = "Deleting user...";
     public static final String USER_DELETED = "Successfully deleted user";
+
+
 }
