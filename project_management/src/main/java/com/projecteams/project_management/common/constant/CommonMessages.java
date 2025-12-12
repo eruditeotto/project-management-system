@@ -5,10 +5,10 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class CommonMessages {
 
-    public static final String RETRIEVED = "RETRIEVED";
-    public static final String CREATED = "CREATED";
-    public static final String UPDATED = "UPDATED";
-    public static final String DELETED = "DELETED";
+    public static final String RETRIEVE = "RETRIEVED";
+    public static final String CREATE = "CREATED";
+    public static final String UPDATE = "UPDATED";
+    public static final String DELETE = "DELETED";
     public static final String PROCESSING = "PROCESSING";
 
     public static final String INVALID_REQUEST = "Invalid request";

@@ -1,6 +1,6 @@
 package com.projecteams.project_management.user.service;
 
-import static com.projecteams.project_management.common.constant.CommonMessages.RETRIEVED;
+import static com.projecteams.project_management.common.constant.CommonMessages.RETRIEVE;
 import static com.projecteams.project_management.user.constant.UserMessages.RETRIEVING_ALL_USER;
 
 import java.util.Collections;
@@ -27,7 +27,7 @@ public class UserService {
 
     public List<UserResponse> getAll() {
 
-        return executeWithLogging(RETRIEVED, RETRIEVING_ALL_USER, null, () -> {
+        return executeWithLogging(RETRIEVE, RETRIEVING_ALL_USER, null, () -> {
             List<User> users = userRepository.findAll();
 
             if (users.isEmpty()) {

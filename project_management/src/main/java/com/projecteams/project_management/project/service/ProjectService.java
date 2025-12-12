@@ -1,23 +1,28 @@
 package com.projecteams.project_management.project.service;
 
-import static com.projecteams.project_management.common.constant.CommonMessages.CREATED;
-import static com.projecteams.project_management.common.constant.CommonMessages.RETRIEVED;
-import static com.projecteams.project_management.common.constant.CommonMessages.UPDATED;
+import static com.projecteams.project_management.common.constant.CommonMessages.CREATE;
+import static com.projecteams.project_management.common.constant.CommonMessages.RETRIEVE;
+import static com.projecteams.project_management.common.constant.CommonMessages.UPDATE;
+import static com.projecteams.project_management.project.constant.ProjectMessages.ALREADY_A_PROJECT_MEMBER;
 import static com.projecteams.project_management.project.constant.ProjectMessages.CREATING_PROJECT;
 import static com.projecteams.project_management.project.constant.ProjectMessages.PROJECT_NOT_FOUND;
 import static com.projecteams.project_management.project.constant.ProjectMessages.RETRIEVING_ALL_ACTIVE_PROJECT_BY_MEMBER_ID;
 import static com.projecteams.project_management.project.constant.ProjectMessages.RETRIEVING_ALL_PROJECT;
 import static com.projecteams.project_management.project.constant.ProjectMessages.RETRIEVING_ALL_PROJECT_BY_MEMBER_ID;
+import static com.projecteams.project_management.project.constant.ProjectMessages.RETRIEVING_CREATOR_PROJECT_BY_ID;
 import static com.projecteams.project_management.project.constant.ProjectMessages.RETRIEVING_MEMBER_PROJECT_BY_ID;
+import static com.projecteams.project_management.project.constant.ProjectMessages.SAVING_MEMBER;
 import static com.projecteams.project_management.project.constant.ProjectMessages.UPDATING_PROJECT;
+import static com.projecteams.project_management.user.constant.UserMessages.RETRIEVING_USER;
+import static com.projecteams.project_management.user.constant.UserMessages.USER_NOT_FOUND;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 import org.springframework.stereotype.Service;
 
 import com.projecteams.project_management.common.util.LoggerUtils;
-import com.projecteams.project_management.common.util.ValidationUtils;
 import com.projecteams.project_management.exception.AccessDeniedException;
 import com.projecteams.project_management.exception.NotFoundException;
 import com.projecteams.project_management.exception.ServiceException;
@@ -25,6 +30,7 @@ import com.projecteams.project_management.project.Project;
 import com.projecteams.project_management.project.dto.request.ProjectRequest;
 import com.projecteams.project_management.project.dto.response.ProjectResponse;
 import com.projecteams.project_management.project.repository.ProjectRepository;
+import com.projecteams.project_management.user.User;
 import com.projecteams.project_management.user.repository.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -39,94 +45,128 @@ public class ProjectService {
     private final UserRepository userRepository;
 
     public List<ProjectResponse> getAll() {
-
-        return executeWithLogging(RETRIEVED, RETRIEVING_ALL_PROJECT, null, () -> {
+        try {
             List<Project> projects = projectRepository.findAll();
+
             if (projects.isEmpty()) {
                 throw new NotFoundException(PROJECT_NOT_FOUND + RETRIEVING_ALL_PROJECT, null);
             }
-            return projects.stream().map(ProjectResponse::toResponse).toList();
-        });
 
+            log.info(LoggerUtils.formatSuccess(RETRIEVE, RETRIEVING_ALL_PROJECT, null));
+            return projects.stream().map(ProjectResponse::toResponse).toList();
+
+        } catch (RuntimeException e) {
+            throw new ServiceException(RETRIEVING_ALL_PROJECT, e);
+        }
     }
 
     public List<ProjectResponse> getAllByMemberId(Long userId) {
-
-        return executeWithLogging(RETRIEVED, RETRIEVING_ALL_PROJECT_BY_MEMBER_ID, userId, () -> {
-            ValidationUtils.checkIfNull(RETRIEVING_ALL_PROJECT_BY_MEMBER_ID, userId);
+        try {
             List<Project> projects = projectRepository.findAllByMember(userId);
+
             if (projects.isEmpty()) {
                 throw new NotFoundException(PROJECT_NOT_FOUND + RETRIEVING_ALL_PROJECT_BY_MEMBER_ID, userId);
             }
-            return projects.stream().map(ProjectResponse::toResponse).toList();
-        });
 
+            log.info(LoggerUtils.formatSuccess(RETRIEVE, RETRIEVING_ALL_PROJECT_BY_MEMBER_ID, userId));
+            return projects.stream().map(ProjectResponse::toResponse).toList();
+
+        } catch (RuntimeException e) {
+            throw new ServiceException(RETRIEVING_ALL_PROJECT_BY_MEMBER_ID, e);
+        }
     }
 
     public List<ProjectResponse> getAllActiveByMemberId(Long userId) {
-
-        return executeWithLogging(RETRIEVED, RETRIEVING_ALL_ACTIVE_PROJECT_BY_MEMBER_ID, userId, () -> {
-            ValidationUtils.checkIfNull(RETRIEVING_ALL_ACTIVE_PROJECT_BY_MEMBER_ID, userId);
+        try {
             List<Project> projects = projectRepository.findAllActiveByMember(userId);
+
             if (projects.isEmpty()) {
                 throw new NotFoundException(PROJECT_NOT_FOUND + RETRIEVING_ALL_ACTIVE_PROJECT_BY_MEMBER_ID, userId);
             }
-            return projects.stream().map(ProjectResponse::toResponse).toList();
-        });
 
+            log.info(LoggerUtils.formatSuccess(RETRIEVE, RETRIEVING_ALL_ACTIVE_PROJECT_BY_MEMBER_ID, userId));
+            return projects.stream().map(ProjectResponse::toResponse).toList();
+
+        } catch (RuntimeException e) {
+            throw new ServiceException(RETRIEVING_ALL_ACTIVE_PROJECT_BY_MEMBER_ID, e);
+        }
     }
 
     public ProjectResponse getById(Long projectId, Long userId) {
-
-        return executeWithLogging(RETRIEVED, RETRIEVING_MEMBER_PROJECT_BY_ID, projectId, () -> {
-            ValidationUtils.checkIfNull(RETRIEVING_MEMBER_PROJECT_BY_ID, projectId, userId);
-
+        try {
             Project project = projectRepository.findById(projectId)
-                    .orElseThrow(() -> new NotFoundException(RETRIEVING_MEMBER_PROJECT_BY_ID, projectId));
+                    .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND + RETRIEVING_MEMBER_PROJECT_BY_ID,
+                            projectId));
 
             if (!projectRepository.isMember(projectId, userId)) {
                 throw new AccessDeniedException(RETRIEVING_MEMBER_PROJECT_BY_ID, project.getId());
             }
 
+            log.info(LoggerUtils.formatSuccess(RETRIEVE, RETRIEVING_MEMBER_PROJECT_BY_ID, projectId));
             return ProjectResponse.toBasicResponse(project);
-        });
 
-    }
-
-    public ProjectResponse save(ProjectRequest projectRequest) {
-
-        return executeWithLogging(CREATED, CREATING_PROJECT, null, () -> {
-            ValidationUtils.checkIfNull(CREATING_PROJECT, projectRequest);
-            Project project = projectRequest.toEntity(null);
-            projectRepository.save(project);
-            return ProjectResponse.toBasicResponse(project);
-        });
-
-    }
-
-    public ProjectResponse update(Long projectId, ProjectRequest projectRequest, Long userId) {
-
-        return executeWithLogging(UPDATED, UPDATING_PROJECT, projectId, () -> {
-            ValidationUtils.checkIfNull(UPDATING_PROJECT, projectRequest);
-
-            Project project = projectRepository.findById(projectId)
-                    .orElseThrow(() -> new NotFoundException(RETRIEVING_MEMBER_PROJECT_BY_ID, projectId));
-
-            Project updatedProject = projectRequest.toEntity(project);
-            projectRepository.save(updatedProject);
-
-            return ProjectResponse.toBasicResponse(updatedProject);
-        });
-        
-    }
-
-    private <T> T executeWithLogging(String successEvent, String action, Object resourceId, Supplier<T> supplier) {
-        try {
-            T result = supplier.get();
-            log.info(LoggerUtils.formatSuccess(successEvent, action, resourceId));
-            return result;
         } catch (RuntimeException e) {
-            throw new ServiceException(action, e);
+            throw new ServiceException(RETRIEVING_MEMBER_PROJECT_BY_ID, e);
+        }
+    }
+
+    public void save(ProjectRequest projectRequest) {
+        try {
+            Project project = projectRequest.toEntity(null);
+            project.getMembers().add(project.getCreator());
+
+            projectRepository.save(project);
+
+            log.info(LoggerUtils.formatSuccess(CREATE, CREATING_PROJECT, project.getId()));
+
+        } catch (RuntimeException e) {
+            throw new ServiceException(CREATING_PROJECT, e);
+        }
+    }
+
+    public void update(Long userId, Long projectId, ProjectRequest projectRequest) {
+        try {
+            Project project = projectRepository.findById(projectId)
+                    .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND + RETRIEVING_MEMBER_PROJECT_BY_ID,
+                            projectId));
+
+            if (!Objects.equals(project.getCreator().getId(), userId)) {
+                throw new AccessDeniedException(RETRIEVING_MEMBER_PROJECT_BY_ID, project.getId());
+            }
+
+            projectRepository.save(projectRequest.toEntity(project));
+
+            log.info(LoggerUtils.formatSuccess(UPDATE, UPDATING_PROJECT, projectId));
+
+        } catch (RuntimeException e) {
+            throw new ServiceException(UPDATING_PROJECT, e);
+        }
+    }
+
+    public void addMember(Long projectId, Long userId, Long newMemberId) {
+        try {
+            Project project = projectRepository.findById(projectId)
+                    .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND + RETRIEVING_CREATOR_PROJECT_BY_ID,
+                            projectId));
+
+            if (!Objects.equals(project.getCreator().getId(), userId)) {
+                throw new AccessDeniedException(RETRIEVING_MEMBER_PROJECT_BY_ID, projectId);
+            }
+
+            User newMember = userRepository.findById(newMemberId)
+                    .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + RETRIEVING_USER, projectId));
+
+            if (projectRepository.isMember(projectId, newMemberId)) {
+                throw new AccessDeniedException(ALREADY_A_PROJECT_MEMBER, project.getId());
+            }
+
+            project.getMembers().add(newMember);
+            projectRepository.save(project);
+
+            log.info(LoggerUtils.formatSuccess(UPDATE, SAVING_MEMBER, projectId));
+
+        } catch (RuntimeException e) {
+            throw new ServiceException(SAVING_MEMBER, e);
         }
     }
 }
