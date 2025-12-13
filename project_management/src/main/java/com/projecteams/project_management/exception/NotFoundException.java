@@ -8,7 +8,7 @@ public class NotFoundException extends RuntimeException {
         this.resourceId = null;
     }
 
-    public NotFoundException(String message, int id) {
+    public NotFoundException(String message, Object id) {
         super(message);
         this.resourceId = String.valueOf(id); 
     }

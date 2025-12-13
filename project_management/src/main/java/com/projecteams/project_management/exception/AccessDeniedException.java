@@ -8,7 +8,7 @@ public class AccessDeniedException extends RuntimeException {
         this.resourceId = null;
     }
 
-    public AccessDeniedException(String message, int id) {
+    public AccessDeniedException(String message, Object id) {
         super(message);
         this.resourceId = String.valueOf(id);
     }

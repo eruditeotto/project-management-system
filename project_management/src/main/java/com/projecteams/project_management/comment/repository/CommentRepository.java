@@ -11,7 +11,7 @@ public interface CommentRepository extends JpaRepository<Comment,Integer> {
 
     List<Comment> findByTaskId(Integer taskId);
     List<Comment> findByUserId(Integer userId);
-    List<Comment> findByComment(Integer commentId);
+    List<Comment> findByComment(String commentId);
 
 
 
