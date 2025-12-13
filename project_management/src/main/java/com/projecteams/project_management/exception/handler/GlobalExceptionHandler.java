@@ -1,9 +1,9 @@
 package com.projecteams.project_management.exception.handler;
 
-import static com.projecteams.project_management.common.constant.ErrorMessage.ACCESS_DENIED;
-import static com.projecteams.project_management.common.constant.ErrorMessage.INVALID_REQUEST;
-import static com.projecteams.project_management.common.constant.ErrorMessage.SERVICE_FAILURE;
-import static com.projecteams.project_management.common.constant.ErrorMessage.UNEXPECTED_ERROR;
+import static com.projecteams.project_management.common.constant.CommonMessages.ACCESS_DENIED;
+import static com.projecteams.project_management.common.constant.CommonMessages.INVALID_REQUEST;
+import static com.projecteams.project_management.common.constant.CommonMessages.SERVICE_FAILURE;
+import static com.projecteams.project_management.common.constant.CommonMessages.UNEXPECTED_ERROR;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;

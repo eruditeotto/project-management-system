@@ -8,7 +8,7 @@ public class BadRequestException extends RuntimeException {
         this.resourceId = null;
     }
 
-    public BadRequestException(String message, int id) {
+    public BadRequestException(String message, Object id) {
         super(message);
         this.resourceId = String.valueOf(id);
     }
