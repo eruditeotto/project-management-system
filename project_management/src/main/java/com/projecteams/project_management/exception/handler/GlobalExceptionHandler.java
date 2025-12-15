@@ -1,9 +1,9 @@
 package com.projecteams.project_management.exception.handler;
 
-import static com.projecteams.project_management.common.constant.ErrorMessage.ACCESS_DENIED;
-import static com.projecteams.project_management.common.constant.ErrorMessage.INVALID_REQUEST;
-import static com.projecteams.project_management.common.constant.ErrorMessage.SERVICE_FAILURE;
-import static com.projecteams.project_management.common.constant.ErrorMessage.UNEXPECTED_ERROR;
+import static com.projecteams.project_management.common.constant.CommonMessages.ACCESS_DENIED;
+import static com.projecteams.project_management.common.constant.CommonMessages.INVALID_REQUEST;
+import static com.projecteams.project_management.common.constant.CommonMessages.SERVICE_FAILURE;
+import static com.projecteams.project_management.common.constant.CommonMessages.UNEXPECTED_ERROR;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -59,7 +59,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException e) {
-        log.error(LoggerUtils.formatError(FORBIDDEN.name(), e.getResourceId(), e.getMessage()));
+        log.error(LoggerUtils.formatError(FORBIDDEN.name(), e.getMessage(), e.getResourceId()));
         return ResponseEntity
                 .status(FORBIDDEN)
                 .body(ResponseUtils.buildErrorResponse(FORBIDDEN, ACCESS_DENIED, e.getMessage()));
@@ -67,7 +67,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<?> handleBadRequestError(BadRequestException e) {
-        log.error(LoggerUtils.formatError(BAD_REQUEST.name(), e.getResourceId(), e.getMessage()));
+        log.error(LoggerUtils.formatError(BAD_REQUEST.name(), e.getMessage(), e.getResourceId()));
         return ResponseEntity
                 .status(BAD_REQUEST)
                 .body(ResponseUtils.buildErrorResponse(BAD_REQUEST, INVALID_REQUEST, e.getMessage()));
@@ -75,7 +75,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<?> handleNotFoundException(NotFoundException e) {
-        log.error(LoggerUtils.formatError(NOT_FOUND.name(), e.getResourceId(), e.getMessage()));
+        log.error(LoggerUtils.formatError(NOT_FOUND.name(),e.getMessage(), e.getResourceId()));
         return ResponseEntity
                 .status(NOT_FOUND)
                 .body(ResponseUtils.buildErrorResponse(NOT_FOUND, INVALID_REQUEST, e.getMessage()));
@@ -83,7 +83,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ServiceException.class)
     public ResponseEntity<?> handleServiceException(ServiceException e) {
-        log.error(LoggerUtils.formatError(INTERNAL_SERVER_ERROR.name(), e.getResourceId(), e.getMessage()));
+        log.error(LoggerUtils.formatError(INTERNAL_SERVER_ERROR.name(), e.getMessage(), e.getResourceId()));
         return ResponseEntity
                 .status(INTERNAL_SERVER_ERROR)
                 .body(ResponseUtils.buildErrorResponse(INTERNAL_SERVER_ERROR, SERVICE_FAILURE, e.getMessage()));

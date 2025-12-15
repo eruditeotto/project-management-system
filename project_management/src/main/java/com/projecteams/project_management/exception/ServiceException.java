@@ -13,7 +13,7 @@ public class ServiceException extends RuntimeException {
         this.resourceId = null;
     }
 
-    public ServiceException(String message, int id) {
+    public ServiceException(String message, Object id) {
         super(message);
         this.resourceId = String.valueOf(id);
     }
