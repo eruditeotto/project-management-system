@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id="project_management" external.linked.project.path="$MODULE_DIR$/../../project_management" external.root.project.path="$MODULE_DIR$/../../project_management" external.system.id="GRADLE" external.system.module.group="com.projecteams" external.system.module.version="0.0.1-SNAPSHOT" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../project_management">
+      <excludeFolder url="file://$MODULE_DIR$/../../project_management/.gradle" />
+      <excludeFolder url="file://$MODULE_DIR$/../../project_management/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../../project_management/out" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

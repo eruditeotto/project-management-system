@@ -4,9 +4,13 @@ import com.projecteams.project_management.comment.Comment;
 import com.projecteams.project_management.comment.dto.request.CommentRequest;
 import com.projecteams.project_management.comment.dto.response.CommentResponse;
 import com.projecteams.project_management.comment.repository.CommentRepository;
+
+import static com.projecteams.project_management.comment.constant.CommentMessages.*;
 import static com.projecteams.project_management.common.constant.CommonMessages.*;
 import com.projecteams.project_management.common.util.LoggerUtils;
+import com.projecteams.project_management.exception.NotFoundException;
 import com.projecteams.project_management.exception.ServiceException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +47,7 @@ public class CommentService {
 
     }
 
-    public CommentResponse getById(Integer id){
+    public CommentResponse getById(Long id){
 
         try{
             Comment comment = commentRepository.findById(id)
@@ -58,7 +62,7 @@ public class CommentService {
         }
     }
 
-    public List<CommentResponse> getByTaskId(Integer taskid){
+    public List<CommentResponse> getByTaskId(Long taskid){
 
         try{
             List<Comment> comments = commentRepository.findByTaskId(taskid);
@@ -101,29 +105,19 @@ public class CommentService {
         }
     }
 
-    public CommentResponse update(Integer id, CommentRequest request){
+    @Transactional
+    public void update(Long id, CommentRequest commentRequest){
 
         try{
             Comment existedComment = commentRepository.findById(id)
-                    .orElseThrow(() -> new ServiceException("Comment not found with id" + id));
+                    .orElseThrow(() -> new NotFoundException(NO_ID_FOUND + RETRIEVING_COMMENT, id));
 
             String currentTime = LocalDateTime.now().format(formatter);
 
-            Comment updateComment = Comment.builder()
-
-                    .id(id)
-                    .comment(request.getComment() != null ? request.getComment() : existedComment.getComment())
-                    .commentId(request.getCommentId() != null ? request.getCommentId() : existedComment.getCommentId())
-                    .taskId(request.getTaskId() != null ? request.getTaskId() : existedComment.getTaskId())
-                    .userId(request.getUserId() != null ? request.getUserId() : existedComment.getUserId())
-                    .createdAt(existedComment.getCreatedAt())
-                    .updatedAt(currentTime)
-
-                    .build();
 
             Comment savedComment = commentRepository.save(updateComment);
 
-            log.info(LoggerUtils.formatProcess(DELETED,"Comment updated with id " + id));
+            log.info(LoggerUtils.formatProcess(CREATING_COMMENT,CREATED,));
 
             return CommentResponse.toBasicResponse(savedComment);
 
@@ -134,11 +128,12 @@ public class CommentService {
 
     }
 
-    public void delete(Integer id){
+    public void delete(Long id){
 
         try{
             if(!commentRepository.existsById(id)){
-                throw new ServiceException("Comment not found with id:" + id);
+
+                throw new ServiceException("Comment not found" + id);
             }
 
             commentRepository.deleteById(id);
@@ -152,13 +147,15 @@ public class CommentService {
 
     }
 
-    public List<CommentResponse> getByUserId(Integer userid){
+    public List<CommentResponse> getByUserId(Long userid){
 
         try{
             List<Comment> comments = commentRepository.findByUserId(userid);
+
             log.info(LoggerUtils.formatProcess(RETRIEVED, "Comments retrieved with user id" + userid));
 
             if(comments.isEmpty()) return Collections.emptyList();
+
             return comments.stream().map(CommentResponse::toBasicResponse).toList();
 
         }catch(RuntimeException e){
@@ -167,6 +164,7 @@ public class CommentService {
         }
 
     }
+
 
 }
 

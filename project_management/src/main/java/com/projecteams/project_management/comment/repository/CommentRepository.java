@@ -7,14 +7,10 @@ import com.projecteams.project_management.comment.Comment;
 import java.util.List;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment,Integer> {
+public interface CommentRepository extends JpaRepository<Comment,Long> {
 
-    List<Comment> findByTaskId(Integer taskId);
-    List<Comment> findByUserId(Integer userId);
-    List<Comment> findByComment(String commentId);
-
-
-
-
-
+    List<Comment> findByTaskId(Long taskId);
+    List<Comment> findByUserId(Long userId);
+    List<Comment> findByComment(Long commentId);
+    
 }

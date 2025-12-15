@@ -6,10 +6,12 @@ import com.projecteams.project_management.comment.dto.request.CommentRequest;
 import com.projecteams.project_management.comment.dto.response.CommentResponse;
 import com.projecteams.project_management.comment.service.CommentService;
 
-import jakarta.validation.Valid;
+
+import com.projecteams.project_management.common.dto.response.SuccessResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -20,17 +22,9 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping
-    public ResponseEntity<?> createComment(@Valid @RequestBody CommentRequest request){
-
-        CommentResponse response = commentService.create(request);
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
-
-    }
 
     @GetMapping
-    public ResponseEntity<List<CommentResponse>> getAllComments(){
+    public ResponseEntity<?> getAllComments(){
 
         List<CommentResponse> comments = commentService.getAll();
 
@@ -38,7 +32,7 @@ public class CommentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> GetCommentById(@PathVariable Integer id){
+    public ResponseEntity<?> GetCommentById(@PathVariable Long id){
 
         CommentResponse response = commentService.getById(id);
 
@@ -46,7 +40,7 @@ public class CommentController {
     }
 
     @GetMapping("/task/{taskId}")
-    public ResponseEntity<List<CommentResponse>> getCommentById(@PathVariable Integer taskid){
+    public ResponseEntity<?> getCommentById(@PathVariable Long taskid){
 
         List<CommentResponse> comments = commentService.getByTaskId(taskid);
 
@@ -55,27 +49,43 @@ public class CommentController {
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<List<CommentResponse>> getCommentsByUserId(@PathVariable Integer userid){
+    public ResponseEntity<?> getAllCommentsByUserId(@PathVariable Long userid){
 
         List<CommentResponse> comments = commentService.getByUserId( userid);
 
         return ResponseEntity.ok(comments);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<CommentResponse> updateComment(@PathVariable Integer id, @Valid @RequestBody CommentRequest request){
+    @PostMapping
+    public ResponseEntity<?> createComment( @Validated @RequestBody CommentRequest request){
 
-        CommentResponse response = commentService.update(id, request);
+        CommentResponse response = commentService.create(request);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateComment(@PathVariable Long id,  @Validated @RequestBody CommentRequest request){
+
+        CommentResponse response = commentService.getById(id);
 
         return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deletteComments(@PathVariable Integer id){
+    public ResponseEntity<?> deleteComments(@PathVariable Long id){
 
         commentService.delete(id);
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(deleteComments(id));
+    }
+
+    public static <T> SuccessResponse<T> buildSuccess(HttpStatus status, String message){
+        SuccessResponse<T> response = new SuccessResponse<>();
+        response.setStatusCode(status.value());
+
+        return response;
     }
 
 

@@ -30,6 +30,7 @@ public class CommentResponse {
     private String updatedAt;
 
     public static CommentResponse toResponse(Comment comment){
+
         if(Objects.isNull(comment)) return null;
 
         return CommentResponse.builder()
@@ -44,6 +45,7 @@ public class CommentResponse {
     }
 
     public static CommentResponse toBasicResponse(Comment comment){
+
         if(Objects.isNull(comment))return null;
 
         return CommentResponse.builder()

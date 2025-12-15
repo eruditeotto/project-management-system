@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.io.Serial;
+import java.io.Serializable;
 
 @SuperBuilder
 @Data
@@ -16,7 +17,7 @@ import java.io.Serial;
 @Entity
 @Table(name = "comments")
 
-public class Comment {
+public class Comment implements Serializable {
 
     @Serial
     private static final long serialVersionUID= 5942483735188732053L;

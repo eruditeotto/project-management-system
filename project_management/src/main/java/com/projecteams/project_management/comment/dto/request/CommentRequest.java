@@ -29,7 +29,9 @@ public class CommentRequest {
     private Integer userId;
 
     public Comment toEntity(Comment commentEntity){
+
         if(Objects.isNull(commentEntity)){
+
             commentEntity = new Comment();
 
         }
