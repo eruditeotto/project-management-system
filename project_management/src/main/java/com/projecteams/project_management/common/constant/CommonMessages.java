@@ -7,6 +7,7 @@ public class CommonMessages {
 
     public static final String RETRIEVE = "RETRIEVED";
     public static final String CREATE = "CREATED";
+    public static final String ADD = "ADDED";
     public static final String UPDATE = "UPDATED";
     public static final String DELETE = "DELETED";
     public static final String PROCESSING = "PROCESSING";

@@ -1,15 +1,8 @@
 package com.projecteams.project_management.project;
 
-import java.io.Serializable;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.projecteams.project_management.common.enums.PriorityLevel;
 import com.projecteams.project_management.common.enums.Status;
 import com.projecteams.project_management.user.User;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,13 +12,18 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -34,7 +32,8 @@ import lombok.NoArgsConstructor;
 @Table(name = "projects")
 public class Project implements Serializable {
 
-    // TODO: Add @Serial UID
+    @Serial
+    private static final long serialVersionUID = 4223959829004865439L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,13 +64,10 @@ public class Project implements Serializable {
     private User creator;
 
     @Column(name = "created_at", nullable = false)
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at", nullable = false)
+    @UpdateTimestamp
     private LocalDateTime updatedAt;
-
-    @ManyToMany
-    @JoinTable(name = "user_projects", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> members = new HashSet<>();
-
 }

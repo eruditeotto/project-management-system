@@ -5,8 +5,6 @@ import lombok.experimental.UtilityClass;
 @UtilityClass
 public class LoggerUtils {
 
-    private final StringBuilder sb = new StringBuilder();
-
     private static final String EVENT = "event=[\"%s\"]";
     private static final String RESOURCE_ID = " resourceId=\"%s\"";
     private static final String ERROR_CLASS = " errorClass=\"%s\"";
@@ -17,6 +15,8 @@ public class LoggerUtils {
     public static final String FAILED = "FAILED IN: ";
 
     private String format(String event, String statusMessage, Object resourceId, Throwable e) {
+        StringBuilder sb = new StringBuilder();
+
         sb.append(EVENT.formatted(event));
         sb.append(MESSAGE.formatted(statusMessage));
         if (resourceId != null)

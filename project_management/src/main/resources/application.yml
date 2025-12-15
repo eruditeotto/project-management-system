@@ -3,9 +3,9 @@ spring:
     name: project_management
 
   datasource:
-    url: jdbc:mysql://localhost:3306/projecteams
+    url: jdbc:mysql://localhost:3306/project_teams
     username: root
-    password: rootMySQL1234
+    password: root
 
   jpa:
     properties:

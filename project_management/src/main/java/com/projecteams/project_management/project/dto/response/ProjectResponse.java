@@ -34,7 +34,6 @@ public class ProjectResponse {
                 .dueDate(project.getDueDate())
                 .priorityLevel(project.getPriorityLevel())
                 .status(project.getStatus())
-                .isArchived(project.isArchived())
                 .creator(UserResponse.toBasicResponse(project.getCreator()))
                 .build();
     }
