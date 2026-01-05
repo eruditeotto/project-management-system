@@ -44,7 +44,6 @@ public class ProjectService {
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
 
-    @Transactional(readOnly = true)
     public List<ProjectResponse> getAll() {
         try {
             List<Project> projects = projectRepository.findAllActive();
@@ -158,4 +157,5 @@ public class ProjectService {
             throw new ServiceException(DELETING_PROJECT, e);
         }
     }
+
 }
