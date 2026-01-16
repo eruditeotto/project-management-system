@@ -1,17 +1,25 @@
 package com.projecteams.project_management.user.service;
 
+import static com.projecteams.project_management.common.constant.CommonMessages.CREATE;
+import static com.projecteams.project_management.common.constant.CommonMessages.DELETE;
 import static com.projecteams.project_management.common.constant.CommonMessages.RETRIEVE;
+import static com.projecteams.project_management.common.constant.CommonMessages.UPDATE;
+import static com.projecteams.project_management.user.constant.UserMessages.CREATING_USER;
+import static com.projecteams.project_management.user.constant.UserMessages.DELETING_USER;
 import static com.projecteams.project_management.user.constant.UserMessages.RETRIEVING_ALL_USER;
+import static com.projecteams.project_management.user.constant.UserMessages.RETRIEVING_USER;
+import static com.projecteams.project_management.user.constant.UserMessages.UPDATING_USER;
+import static com.projecteams.project_management.user.constant.UserMessages.USER_NOT_FOUND;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
 
 import org.springframework.stereotype.Service;
 
 import com.projecteams.project_management.common.util.LoggerUtils;
+import com.projecteams.project_management.exception.NotFoundException;
 import com.projecteams.project_management.exception.ServiceException;
 import com.projecteams.project_management.user.User;
+import com.projecteams.project_management.user.dto.request.UserRequest;
 import com.projecteams.project_management.user.dto.response.UserResponse;
 import com.projecteams.project_management.user.repository.UserRepository;
 
@@ -26,26 +34,71 @@ public class UserService {
     private final UserRepository userRepository;
 
     public List<UserResponse> getAll() {
-
-        return executeWithLogging(RETRIEVE, RETRIEVING_ALL_USER, null, () -> {
+        try {
             List<User> users = userRepository.findAll();
 
-            if (users.isEmpty()) {
-                return Collections.emptyList();
-            }
+            log.info(LoggerUtils.formatSuccess(RETRIEVE, RETRIEVING_ALL_USER));
 
             return users.stream().map(UserResponse::toResponse).toList();
-        });
-
+        } catch (RuntimeException e) {
+            throw new ServiceException(RETRIEVING_ALL_USER, e);
+        }
     }
 
-    private <T> T executeWithLogging(String successEvent, String action, Object resourceId, Supplier<T> supplier) {
+    public UserResponse getById(Long userId) {
         try {
-            T result = supplier.get();
-            log.info(LoggerUtils.formatSuccess(successEvent, action, resourceId));
-            return result;
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND, userId));
+
+            log.info(LoggerUtils.formatSuccess(RETRIEVE, RETRIEVING_USER, userId));
+
+            return UserResponse.toResponse(user);
+        } catch (NotFoundException e) {
+            throw e;
         } catch (RuntimeException e) {
-            throw new ServiceException(action, e);
+            throw new ServiceException(RETRIEVING_USER, e);
+        }
+    }
+
+    public void save(UserRequest userRequest) {
+        try {
+            User user = userRequest.toEntity(null);
+
+            userRepository.save(user);
+
+            log.info(LoggerUtils.formatSuccess(CREATE, CREATING_USER, user.getId()));
+        } catch (RuntimeException e) {
+            throw new ServiceException(CREATING_USER, e);
+        }
+    }
+
+    public void update(Long userId, UserRequest userRequest) {
+        try {
+            User existingUser = userRepository.findById(userId)
+                    .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND, userId));
+
+            User updatedUser = userRequest.toEntity(existingUser);
+            userRepository.save(updatedUser);
+
+            log.info(LoggerUtils.formatSuccess(UPDATE, UPDATING_USER, userId));
+        } catch (NotFoundException e) {
+            throw e;
+        } catch (RuntimeException e) {
+            throw new ServiceException(UPDATING_USER, e);
+        }
+    }
+
+    public void delete(Long userId) {
+        try {
+            if(!userRepository.existsById(userId)) throw new NotFoundException(USER_NOT_FOUND, userId);
+
+            userRepository.deactivateUserById(userId);
+
+            log.info(LoggerUtils.formatSuccess(DELETE, DELETING_USER, userId));
+        } catch (NotFoundException e) {
+            throw e;
+        } catch (RuntimeException e) {
+            throw new ServiceException(DELETING_USER, e);
         }
     }
 }
