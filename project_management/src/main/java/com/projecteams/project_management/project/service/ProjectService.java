@@ -28,7 +28,7 @@ import static com.projecteams.project_management.project.constant.ProjectMessage
 import static com.projecteams.project_management.project.constant.ProjectMessages.PROJECT_NOT_FOUND;
 import static com.projecteams.project_management.project.constant.ProjectMessages.RETRIEVING_ALL_PROJECT;
 import static com.projecteams.project_management.project.constant.ProjectMessages.RETRIEVING_ALL_PROJECT_BY_MEMBER_ID;
-import static com.projecteams.project_management.project.constant.ProjectMessages.RETRIEVING_MEMBER_PROJECT_BY_ID;
+import static com.projecteams.project_management.project.constant.ProjectMessages.RETRIEVING_PROJECT_BY_ID;
 import static com.projecteams.project_management.project.constant.ProjectMessages.UPDATING_PROJECT;
 import static com.projecteams.project_management.user.constant.UserMessages.RETRIEVING_USER;
 import static com.projecteams.project_management.user.constant.UserMessages.USER_NOT_FOUND;
@@ -59,10 +59,12 @@ public class ProjectService {
     public List<ProjectResponse> getAllByMemberId(Long memberId) {
         try {
             if (!userRepository.existsById(memberId))
-                throw new NotFoundException(USER_NOT_FOUND + RETRIEVING_USER, memberId);
+                throw new NotFoundException(
+                        USER_NOT_FOUND,
+                        memberId
+                );
 
             List<Long> projectIds = userProjectService.getAllProjectByMemberId(memberId);
-
             List<Project> projects = projectRepository.findAllByIdIn(projectIds);
 
             log.info(LoggerUtils.formatSuccess(RETRIEVE, RETRIEVING_ALL_PROJECT_BY_MEMBER_ID, memberId));
@@ -78,13 +80,15 @@ public class ProjectService {
     public List<UserResponse> getMembersByProjectId(Long projectId) {
         try {
             if (!projectRepository.existsById(projectId))
-                throw new NotFoundException(PROJECT_NOT_FOUND + RETRIEVING_MEMBER_PROJECT_BY_ID, projectId);
+                throw new NotFoundException(
+                        PROJECT_NOT_FOUND,
+                        projectId
+                );
 
             List<Long> memberIds = userProjectService.getMembersFromProjectId(projectId);
-
             List<User> members = userRepository.findAllByIdIn(memberIds);
 
-            log.info(LoggerUtils.formatSuccess(RETRIEVE, RETRIEVING_MEMBER_PROJECT_BY_ID, projectId));
+            log.info(LoggerUtils.formatSuccess(RETRIEVE, RETRIEVING_PROJECT_BY_ID, projectId));
             return members.stream().map(UserResponse::toResponse).toList();
         } catch (NotFoundException e) {
             throw e;
@@ -97,15 +101,17 @@ public class ProjectService {
     public ProjectResponse getById(Long projectId) {
         try {
             Project project = projectRepository.findById(projectId)
-                    .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND + RETRIEVING_MEMBER_PROJECT_BY_ID,
-                            projectId));
+                    .orElseThrow(() -> new NotFoundException(
+                            PROJECT_NOT_FOUND,
+                            projectId
+                    ));
 
-            log.info(LoggerUtils.formatSuccess(RETRIEVE, RETRIEVING_MEMBER_PROJECT_BY_ID, projectId));
+            log.info(LoggerUtils.formatSuccess(RETRIEVE, RETRIEVING_PROJECT_BY_ID, projectId));
             return ProjectResponse.toBasicResponse(project);
         } catch (NotFoundException e) {
             throw e;
         } catch (RuntimeException e) {
-            throw new ServiceException(RETRIEVING_MEMBER_PROJECT_BY_ID, e);
+            throw new ServiceException(RETRIEVING_PROJECT_BY_ID, e);
         }
     }
 
@@ -128,8 +134,10 @@ public class ProjectService {
     public void update(Long projectId, ProjectRequest projectRequest) {
         try {
             Project project = projectRepository.findById(projectId)
-                    .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND + RETRIEVING_MEMBER_PROJECT_BY_ID,
-                            projectId));
+                    .orElseThrow(() -> new NotFoundException(
+                            PROJECT_NOT_FOUND,
+                            projectId
+                    ));
 
             projectRepository.save(projectRequest.toEntity(project));
 
@@ -145,8 +153,10 @@ public class ProjectService {
     public void delete(Long projectId) {
         try {
             Project project = projectRepository.findById(projectId)
-                    .orElseThrow(() -> new NotFoundException(PROJECT_NOT_FOUND + RETRIEVING_MEMBER_PROJECT_BY_ID,
-                            projectId));
+                    .orElseThrow(() -> new NotFoundException(
+                            PROJECT_NOT_FOUND,
+                            projectId
+                    ));
 
             projectRepository.archiveById(project.getId());
 

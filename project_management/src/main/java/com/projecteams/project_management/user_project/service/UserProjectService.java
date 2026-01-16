@@ -29,7 +29,7 @@ import static com.projecteams.project_management.user_project.constant.UserProje
 public class UserProjectService {
     private final UserProjectRepository userProjectRepository;
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Long> getAllProjectByMemberId(Long memberId) {
         try {
             List<UserProject> userProjects = userProjectRepository.findAllByUser_Id(memberId);
@@ -43,7 +43,7 @@ public class UserProjectService {
         }
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Long> getMembersFromProjectId(Long projectId) {
         try {
             List<UserProject> members = userProjectRepository.findAllByProject_Id(projectId);

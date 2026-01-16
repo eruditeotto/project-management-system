@@ -3,6 +3,8 @@ package com.projecteams.project_management.project.dto.request;
 import java.time.LocalDate;
 import java.util.Objects;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import com.projecteams.project_management.common.enums.PriorityLevel;
 import com.projecteams.project_management.common.enums.Status;
 import com.projecteams.project_management.project.Project;
@@ -28,6 +30,7 @@ public class ProjectRequest {
     private String description;
 
     @NotNull(message = "Project due date is required")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
 
     @NotNull(message = "Project priority level is required")

@@ -5,7 +5,6 @@ import com.projecteams.project_management.common.util.ResponseUtils;
 import com.projecteams.project_management.project.dto.request.ProjectRequest;
 import com.projecteams.project_management.project.dto.response.ProjectResponse;
 import com.projecteams.project_management.project.service.ProjectService;
-import com.projecteams.project_management.user.User;
 import com.projecteams.project_management.user.dto.request.UserRequest;
 import com.projecteams.project_management.user.dto.response.UserResponse;
 import jakarta.validation.Valid;
@@ -19,12 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import static com.projecteams.project_management.project.constant.ProjectMessages.CREATING_PROJECT;
 import static com.projecteams.project_management.project.constant.ProjectMessages.DELETING_PROJECT;
-import static com.projecteams.project_management.project.constant.ProjectMessages.RETRIEVING_MEMBER_PROJECT_BY_ID;
+import static com.projecteams.project_management.project.constant.ProjectMessages.RETRIEVING_PROJECT_BY_ID;
 import static com.projecteams.project_management.project.constant.ProjectMessages.UPDATING_PROJECT;
 import static org.springframework.http.HttpStatus.OK;
 import static com.projecteams.project_management.common.constant.CommonMessages.PROCESSING;
@@ -68,24 +66,24 @@ public class ProjectController {
 
     @GetMapping("{id}/members")
     public ResponseEntity<?> getMembersByProjectId(@PathVariable("id") Long id) {
-        log.info(LoggerUtils.formatProcess(PROCESSING, RETRIEVING_MEMBER_PROJECT_BY_ID));
+        log.info(LoggerUtils.formatProcess(PROCESSING, RETRIEVING_PROJECT_BY_ID));
         List<UserResponse> members = projectService.getMembersByProjectId(id);
 
         return ResponseEntity.ok(ResponseUtils.buildSuccessResponse(
                 OK,
-                RETRIEVING_MEMBER_PROJECT_BY_ID,
+                RETRIEVING_PROJECT_BY_ID,
                 members
         ));
     }
 
     @GetMapping("{id}")
     public ResponseEntity<?> getById(@PathVariable("id") Long id) {
-        log.info(LoggerUtils.formatProcess(PROCESSING, RETRIEVING_MEMBER_PROJECT_BY_ID));
+        log.info(LoggerUtils.formatProcess(PROCESSING, RETRIEVING_PROJECT_BY_ID));
         ProjectResponse project = projectService.getById(id);
 
         return ResponseEntity.ok(ResponseUtils.buildSuccessResponse(
                 OK,
-                RETRIEVING_MEMBER_PROJECT_BY_ID,
+                RETRIEVING_PROJECT_BY_ID,
                 project
         ));
     }

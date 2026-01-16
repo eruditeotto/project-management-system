@@ -2,7 +2,7 @@ package com.projecteams.project_management.user.constant;
 
 public class UserMessages {
 
-    public static final String USER_NOT_FOUND = "No user/s found after: ";
+    public static final String USER_NOT_FOUND = "No users found.";
 
     public static final String RETRIEVING_ALL_USER = "Retrieving all users...";
     public static final String RETRIEVING_USER = "Retrieving user...";

@@ -18,6 +18,8 @@ public class ErrorResponse<T> {
 
     private int statusCode;
 
+    private String resourceId;
+    
     private String message;
 
     private T data;
