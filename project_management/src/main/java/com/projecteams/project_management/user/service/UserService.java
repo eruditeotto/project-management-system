@@ -39,7 +39,7 @@ public class UserService {
 
             log.info(LoggerUtils.formatSuccess(RETRIEVE, RETRIEVING_ALL_USER));
 
-            return users.stream().map(UserResponse::toResponse).toList();
+            return users.stream().map(UserResponse::toBasicResponse).toList();
         } catch (RuntimeException e) {
             throw new ServiceException(RETRIEVING_ALL_USER, e);
         }
@@ -92,7 +92,9 @@ public class UserService {
         try {
             if(!userRepository.existsById(userId)) throw new NotFoundException(USER_NOT_FOUND, userId);
 
-            userRepository.deactivateUserById(userId);
+            User user = userRepository.findById(userId).orElseThrow();
+            user.setIsActive(false);
+            userRepository.save(user);
 
             log.info(LoggerUtils.formatSuccess(DELETE, DELETING_USER, userId));
         } catch (NotFoundException e) {

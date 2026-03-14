@@ -3,12 +3,15 @@ package com.projecteams.project_management.user;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.lang.Contract;
 
 import java.io.Serial;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @SuperBuilder
 @Data
@@ -18,8 +21,6 @@ import java.io.Serializable;
 @Table(name="users")
 public class User implements Serializable{
 
-    @Serial
-    private static final long serialVersionUID = 2790507535614326868L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,13 +32,15 @@ public class User implements Serializable{
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name="is_active",nullable = false)
-    private boolean isActive;
+    @Column(name="is_active", columnDefinition = "BOOLEAN DEFAULT true")
+    private Boolean isActive;
 
-    @Column(name="created_at",nullable = false)
-    private String createdAt;
+    @Column(name="created_at", nullable = false)
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 
-    @Column(name="updated_at",nullable = false)
-    private String updatedAt;
+    @Column(name="updated_at", nullable = false)
+    @UpdateTimestamp
+    private LocalDateTime updatedAt;
 
 }

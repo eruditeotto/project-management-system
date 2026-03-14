@@ -13,7 +13,4 @@ public interface UserRepository extends JpaRepository<User,Long> {
     @Query("SELECT u FROM User u WHERE u.id IN :ids")
     List<User> findAllByIdIn(List<Long> ids);
 
-    @Modifying
-    @Query("UPDATE User u SET u.isActive = false WHERE u.id = :userId")
-    void deactivateUserById(Long userId); 
 }

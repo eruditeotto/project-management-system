@@ -1,5 +1,7 @@
 package com.projecteams.project_management.user.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.projecteams.project_management.user.User;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -7,6 +9,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 
@@ -20,11 +24,13 @@ public class UserResponse {
 
     private String email;
 
-    private boolean isActive;
+    private Boolean isActive;
 
-    private String createdAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime createdAt;
 
-    private String updatedAt;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+    private LocalDateTime updatedAt;
 
     public static UserResponse toResponse(User user) {
         if (Objects.isNull(user)) return null;
@@ -32,7 +38,7 @@ public class UserResponse {
         return UserResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail())
-                .isActive(user.isActive())
+                .isActive(user.getIsActive())
 
                 .build();
     }
@@ -43,7 +49,7 @@ public class UserResponse {
         return UserResponse.builder()
                 .id(user.getId())
                 .email(user.getEmail())
-                .isActive(user.isActive())
+                .isActive(user.getIsActive())
                 .createdAt(user.getCreatedAt())
                 .updatedAt(user.getUpdatedAt())
 

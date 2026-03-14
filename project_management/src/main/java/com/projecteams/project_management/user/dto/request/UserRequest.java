@@ -23,19 +23,22 @@ public class UserRequest {
     @Email(message = "Invalid email format")
     private String email;
 
+    @NotBlank(message = "Password is required")
     @Size(min = 8, max = 64, message = "Password must be between 8 and 64 characters long")
-    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$", message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character")
+    @Pattern(
+            regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$",
+            message = "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character"
+    )
     private String password;
 
-    private boolean isActive;
+    private Boolean isActive;
 
     public User toEntity(User user) {
         if (Objects.isNull(user)) {
             user = new User();
             user.setPassword(password);
-
+            user.setIsActive(true);
         }
-        user.setId(id);
         user.setEmail(email);
 
         return user;

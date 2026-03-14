@@ -52,7 +52,7 @@ public class ProjectController {
         ));
     }
 
-    @GetMapping("member/{id}")
+    @GetMapping("/member/{id}")
     public ResponseEntity<?> getAllByMemberId(@PathVariable("id") Long id) {
         log.info(LoggerUtils.formatProcess(PROCESSING, RETRIEVING_ALL_PROJECT_BY_MEMBER_ID));
         List<ProjectResponse> projects = projectService.getAllByMemberId(id);
@@ -64,7 +64,7 @@ public class ProjectController {
         ));
     }
 
-    @GetMapping("{id}/members")
+    @GetMapping("/{id}/members")
     public ResponseEntity<?> getMembersByProjectId(@PathVariable("id") Long id) {
         log.info(LoggerUtils.formatProcess(PROCESSING, RETRIEVING_PROJECT_BY_ID));
         List<UserResponse> members = projectService.getMembersByProjectId(id);
@@ -76,7 +76,7 @@ public class ProjectController {
         ));
     }
 
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<?> getById(@PathVariable("id") Long id) {
         log.info(LoggerUtils.formatProcess(PROCESSING, RETRIEVING_PROJECT_BY_ID));
         ProjectResponse project = projectService.getById(id);
@@ -90,11 +90,10 @@ public class ProjectController {
 
     @PostMapping
     public ResponseEntity<?> createProject(
-            @Valid @RequestBody ProjectRequest projectRequest,
-            @RequestBody(required = false) List<UserRequest> members
+            @Valid @RequestBody ProjectRequest projectRequest
     ) {
         log.info(LoggerUtils.formatProcess(PROCESSING, CREATING_PROJECT));
-        projectService.save(projectRequest, members != null ? members : new ArrayList<>());
+        projectService.save(projectRequest);
 
         return ResponseEntity.ok(ResponseUtils.buildSuccessResponse(
                 OK,

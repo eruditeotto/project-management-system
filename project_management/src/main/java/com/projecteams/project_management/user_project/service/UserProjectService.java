@@ -58,10 +58,10 @@ public class UserProjectService {
     }
 
     @Transactional
-    public void addMembers(List<UserRequest> memberRequests, Project project) {
+    public void addMembers(List<User> memberRequests, Project project) {
         try {
             List<UserProject> userProjects = memberRequests.stream()
-                    .map(user -> new UserProject(user.toEntity(null), project))
+                    .map(user -> new UserProject(user, project))
                     .collect(Collectors.toList());
 
             userProjectRepository.saveAll(userProjects);

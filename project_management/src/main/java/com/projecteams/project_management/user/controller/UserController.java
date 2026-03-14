@@ -26,6 +26,7 @@ import com.projecteams.project_management.user.dto.request.UserRequest;
 import com.projecteams.project_management.user.dto.response.UserResponse;
 import com.projecteams.project_management.user.service.UserService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -58,7 +59,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<?> save(@RequestBody UserRequest user) {
+    public ResponseEntity<?> save(@Valid @RequestBody UserRequest user) {
 
         log.info(LoggerUtils.formatProcess(PROCESSING, CREATING_USER));
         userService.save(user);
@@ -70,7 +71,7 @@ public class UserController {
     @PutMapping("/{id}")
     public ResponseEntity<?> update(
             @PathVariable Long id,
-            @RequestBody UserRequest userRequest
+            @Valid @RequestBody UserRequest userRequest
     ) {
 
         log.info(LoggerUtils.formatProcess(PROCESSING, UPDATING_USER));

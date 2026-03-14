@@ -2,6 +2,7 @@ package com.projecteams.project_management.project.constant;
 
 public class ProjectMessages {
     public static final String PROJECT_NOT_FOUND = "Project is not found.";
+    public static final String PROJECT_REQUIRES_CREATOR_ID = "Project creator ID is required.";
 
     public static final String RETRIEVING_ALL_PROJECT = "Retrieving all projects...";
     public static final String RETRIEVING_ALL_PROJECT_BY_MEMBER_ID = "Retrieving projects by a member...";

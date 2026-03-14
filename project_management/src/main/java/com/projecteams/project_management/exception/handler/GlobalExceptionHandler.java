@@ -104,8 +104,8 @@ public class GlobalExceptionHandler {
                                 .status(FORBIDDEN)
                                 .body(ResponseUtils.buildErrorResponse(
                                                 FORBIDDEN,
-                                                e.getMessage(),
-                                                null));
+                                                e.getResourceId(),
+                                                e.getMessage()));
         }
 
         @ExceptionHandler(BadRequestException.class)
@@ -115,8 +115,8 @@ public class GlobalExceptionHandler {
                                 .status(BAD_REQUEST)
                                 .body(ResponseUtils.buildErrorResponse(
                                                 BAD_REQUEST,
-                                                e.getMessage(),
-                                                null));
+                                                e.getResourceId(),
+                                                e.getMessage()));
         }
 
         @ExceptionHandler(NotFoundException.class)
@@ -126,9 +126,8 @@ public class GlobalExceptionHandler {
                                 .status(NOT_FOUND)
                                 .body(ResponseUtils.buildErrorResponse(
                                                 NOT_FOUND,
-
-                                                e.getMessage(),
-                                                null));
+                                                e.getResourceId(),
+                                                e.getMessage()));
         }
 
         @ExceptionHandler(ServiceException.class)
@@ -138,8 +137,8 @@ public class GlobalExceptionHandler {
                                 .status(INTERNAL_SERVER_ERROR)
                                 .body(ResponseUtils.buildErrorResponse(
                                                 INTERNAL_SERVER_ERROR,
-                                                e.getMessage(),
-                                                null));
+                                                e.getResourceId(),
+                                                e.getMessage()));
         }
 
         @ExceptionHandler(Exception.class)
@@ -149,8 +148,7 @@ public class GlobalExceptionHandler {
                                 .status(INTERNAL_SERVER_ERROR)
                                 .body(ResponseUtils.buildErrorResponse(
                                                 INTERNAL_SERVER_ERROR,
-                                                e.getMessage(),
-                                                null));
+                                                e.getMessage()));
         }
 
         private Map<String, String> getFieldErrorMap(BindingResult result) {

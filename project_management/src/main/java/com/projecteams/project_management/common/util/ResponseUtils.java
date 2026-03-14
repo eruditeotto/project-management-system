@@ -1,5 +1,7 @@
 package com.projecteams.project_management.common.util;
 
+import java.util.Objects;
+
 import org.springframework.http.HttpStatus;
 
 import com.projecteams.project_management.common.dto.response.ErrorResponse;
@@ -37,18 +39,24 @@ public class ResponseUtils {
 
     public static <T> ErrorResponse<T> buildErrorResponse(HttpStatus status, String resourceId, String message) {
         ErrorResponse<T> response = new ErrorResponse<>();
-        response.setStatusCode(status.value());
-        response.setResourceId(resourceId);
-        response.setMessage(FAILED + message);
+        if (!Objects.isNull(status))
+            response.setStatusCode(status.value());
+        if (!Objects.isNull(resourceId))
+            response.setResourceId(resourceId);
+        if (!Objects.isNull(message))
+            response.setMessage(FAILED + message);
 
         return response;
     }
 
     public static <T> ErrorResponse<T> buildErrorResponse(HttpStatus status, String message, T data) {
         ErrorResponse<T> response = new ErrorResponse<>();
-        response.setStatusCode(status.value());
-        response.setMessage(FAILED + message);
-        response.setData(data);
+        if (!Objects.isNull(status))
+            response.setStatusCode(status.value());
+        if (!Objects.isNull(message))
+            response.setMessage(FAILED + message);
+        if (!Objects.isNull(data))
+            response.setData(data);
 
         return response;
     }

@@ -11,7 +11,7 @@ import com.projecteams.project_management.project.Project;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-    @Query("SELECT p FROM Project p WHERE p.isArchived = true")
+    @Query("SELECT p FROM Project p WHERE p.isArchived = false")
     List<Project> findAllActive();
 
     List<Project> findAllByIdIn(List<Long> ids);

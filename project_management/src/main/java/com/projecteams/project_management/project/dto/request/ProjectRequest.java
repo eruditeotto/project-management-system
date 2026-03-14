@@ -39,15 +39,16 @@ public class ProjectRequest {
     @NotNull(message = "Project priority level is required")
     private Status status;
 
-    @NotNull(message = "Project archive status is required")
     private boolean isArchived;
 
-    @NotNull(message = "Creator ID is required")
+    private Long creatorId;
+
     private User creator;
 
     public Project toEntity(Project project) {
         if (Objects.isNull(project)) {
             project = new Project();
+            project.setArchived(false);
         }
 
         project.setName(name);
@@ -55,7 +56,6 @@ public class ProjectRequest {
         project.setDueDate(dueDate);
         project.setPriorityLevel(priorityLevel);
         project.setStatus(status);
-        project.setArchived(isArchived);
 
         return project;
     }

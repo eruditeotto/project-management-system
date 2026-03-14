@@ -1,9 +1,26 @@
 package com.projecteams.project_management.comment.service;
-import static com.projecteams.project_management.comment.constant.CommentMessages.*;
-import static com.projecteams.project_management.common.constant.CommonMessages.*;
+import static com.projecteams.project_management.comment.constant.CommentMessages.COMMENT_NOT_FOUND;
+import static com.projecteams.project_management.comment.constant.CommentMessages.CREATING_COMMENT;
+import static com.projecteams.project_management.comment.constant.CommentMessages.DELETING_COMMENT;
+import static com.projecteams.project_management.comment.constant.CommentMessages.RETRIEVING_ALL_COMMENTS;
+import static com.projecteams.project_management.comment.constant.CommentMessages.RETRIEVING_ALL_COMMENTS_BY_TASK_ID;
+import static com.projecteams.project_management.comment.constant.CommentMessages.RETRIEVING_COMMENTS;
+import static com.projecteams.project_management.comment.constant.CommentMessages.RETRIEVING_COMMENTS_BY_USER_ID;
+import static com.projecteams.project_management.comment.constant.CommentMessages.RETRIEVING_COMMENT_BY_ID;
+import static com.projecteams.project_management.comment.constant.CommentMessages.RETRIEVING_TASK_ID;
+import static com.projecteams.project_management.comment.constant.CommentMessages.TASK_NOT_FOUND;
+import static com.projecteams.project_management.comment.constant.CommentMessages.UPDATING_COMMENT;
+import static com.projecteams.project_management.common.constant.CommonMessages.CREATE;
+import static com.projecteams.project_management.common.constant.CommonMessages.DELETE;
+import static com.projecteams.project_management.common.constant.CommonMessages.RETRIEVE;
+import static com.projecteams.project_management.common.constant.CommonMessages.UPDATE;
 import static com.projecteams.project_management.project.constant.ProjectMessages.PROJECT_NOT_FOUND;
-import static com.projecteams.project_management.project.constant.ProjectMessages.RETRIEVING_MEMBER_PROJECT_BY_ID;
 import static com.projecteams.project_management.user.constant.UserMessages.USER_NOT_FOUND;
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.projecteams.project_management.comment.Comment;
 import com.projecteams.project_management.comment.dto.Request.CommentRequest;
@@ -12,20 +29,14 @@ import com.projecteams.project_management.comment.repository.CommentRepository;
 import com.projecteams.project_management.common.util.LoggerUtils;
 import com.projecteams.project_management.exception.NotFoundException;
 import com.projecteams.project_management.exception.ServiceException;
-import com.projecteams.project_management.project.Project;
-import com.projecteams.project_management.project.dto.response.ProjectResponse;
 import com.projecteams.project_management.user.User;
 import com.projecteams.project_management.user.dto.request.UserRequest;
 import com.projecteams.project_management.user.dto.response.UserResponse;
 import com.projecteams.project_management.user.repository.UserRepository;
-
 import com.projecteams.project_management.user.service.UserService;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @RequiredArgsConstructor
 @Slf4j
